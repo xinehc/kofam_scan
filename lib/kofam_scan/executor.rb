@@ -89,7 +89,7 @@ module KofamScan
     def setup_directories
       require 'fileutils'
 
-      dirs_to_make = ["tabular"]
+      dirs_to_make = ["tabular", "domain"]
       dirs_to_make.push("output", "alignment") if config.create_alignment?
 
       dirs_to_make.each do |dir|
@@ -115,6 +115,7 @@ module KofamScan
 
     def hmmsearch_command
       result = File.join(config.tmp_dir, "tabular", "{/.}")
+      domain = File.join(config.tmp_dir, "domain", "{/.}")
       if config.create_alignment?
         out = File.join(config.tmp_dir, "output", "{/.}")
       else
@@ -122,7 +123,7 @@ module KofamScan
       end
 
       HMMSearch.command_path = config.hmmsearch
-      HMMSearch.new("{}", config.query, cpu: 1, o: out, T: 0, tblout: result).to_a
+      HMMSearch.new("{}", config.query, cpu: 1, o: out, T: 0, tblout: result, domtblout: domain).to_a
     end
 
     def search_hit_genes
